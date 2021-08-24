@@ -6,14 +6,36 @@
 </template>
 
 <script>
+import Vue from 'vue'
 import HelloWorld from './components/HelloWorld.vue'
 
-export default {
+export default Vue.extend({
   name: 'App',
   components: {
     HelloWorld
-  }
-}
+  },
+  data:()=>({
+     
+  }),
+  async created(){
+      //alert();
+      this.fetch_data()
+    },
+    methods:{
+      async fetch_data(){
+      fetch('https://api.16biticon.com/auth/getJsonLdData')
+      .then(response => (response).text())
+      .then(structuredDataText => {
+        console.log(JSON.parse(structuredDataText).json_ld)
+        const script = document.createElement('script');
+        script.setAttribute('type', 'application/ld+json');
+        script.textContent = JSON.parse(structuredDataText).json_ld;
+        document.head.appendChild(script);
+      });
+      }
+    }
+
+});
 </script>
 
 <style>
